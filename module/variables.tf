@@ -27,6 +27,14 @@ variable "backup_targets" {
     }))
   }))
   default = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.backup_targets :
+      v.location_type == "cluster" ? v.cluster_ext_id != null : v.object_store_config != null
+    ])
+    error_message = "Each backup target must set cluster_ext_id when location_type is \"cluster\", or object_store_config when location_type is \"object_store\"."
+  }
 }
 
 variable "restore_sources" {
@@ -45,6 +53,14 @@ variable "restore_sources" {
     }))
   }))
   default = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.restore_sources :
+      v.location_type == "cluster" ? v.cluster_ext_id != null : v.object_store_config != null
+    ])
+    error_message = "Each restore source must set cluster_ext_id when location_type is \"cluster\", or object_store_config when location_type is \"object_store\"."
+  }
 }
 
 variable "restores" {
