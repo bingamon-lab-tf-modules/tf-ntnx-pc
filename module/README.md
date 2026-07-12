@@ -50,6 +50,7 @@ No modules.
 |------|-------------|
 | <a name="output_backup_target_ids"></a> [backup\_target\_ids](#output\_backup\_target\_ids) | Map of backup target names to ext\_ids |
 | <a name="output_backup_targets"></a> [backup\_targets](#output\_backup\_targets) | Backup target details |
+| <a name="output_outputs"></a> [outputs](#output\_outputs) | Aggregate of all module outputs (spec §7.6 contract, consumed by the landing zone as module.<x>.outputs). |
 | <a name="output_pc_summary"></a> [pc\_summary](#output\_pc\_summary) | Summary of Prism Central backup/restore resources |
 | <a name="output_restore_ids"></a> [restore\_ids](#output\_restore\_ids) | Map of restore operation names to IDs |
 | <a name="output_restore_source_ids"></a> [restore\_source\_ids](#output\_restore\_source\_ids) | Map of restore source names to ext\_ids |
