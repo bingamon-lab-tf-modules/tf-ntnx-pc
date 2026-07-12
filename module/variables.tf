@@ -1,3 +1,15 @@
+variable "enable_data_lookups" {
+  description = "Enable data source lookups for existing resources"
+  type        = bool
+  default     = false
+}
+
+variable "domain_manager_ext_id" {
+  description = "Domain manager (Prism Central) external ID for data lookups"
+  type        = string
+  default     = null
+}
+
 variable "backup_targets" {
   description = "Map of backup targets (cluster or object store)"
   type = map(object({

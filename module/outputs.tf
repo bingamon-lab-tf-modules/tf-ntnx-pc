@@ -31,6 +31,25 @@ output "restore_source_ids" {
   }
 }
 
+output "restores" {
+  description = "Restore operation details"
+  value = {
+    for k, v in nutanix_pc_restore_v2.restore : k => {
+      id                               = v.id
+      restore_point_ext_id             = v.ext_id
+      restore_source_ext_id            = v.restore_source_ext_id
+      restorable_domain_manager_ext_id = v.restorable_domain_manager_ext_id
+    }
+  }
+}
+
+output "restore_ids" {
+  description = "Map of restore operation names to IDs"
+  value = {
+    for k, v in nutanix_pc_restore_v2.restore : k => v.id
+  }
+}
+
 output "pc_summary" {
   description = "Summary of Prism Central backup/restore resources"
   value = {
