@@ -5,6 +5,10 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
+  nixpkgs:
+    url: github:cachix/devenv-nixpkgs/bump-rolling
+  nixpkgs-unstable:
+    url: github:nixos/nixpkgs/nixpkgs-unstable
   mk-shell-bin:
     url: github:rrbutani/nix-mk-shell-bin
   nix2container:
@@ -12,6 +16,4 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
-  nixpkgs:
-    url: github:cachix/devenv-nixpkgs/bump-rolling
 allowUnfree: true
