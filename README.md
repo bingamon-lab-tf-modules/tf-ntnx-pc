@@ -2,6 +2,6 @@
 
 ## Overview
 
-An overview of the module goes here
+Terraform Module for managing Nutanix Prism Central (PC) resources.
 
 The [Terraform Module](module/README.md) documentation contains the available variables and outputs.
