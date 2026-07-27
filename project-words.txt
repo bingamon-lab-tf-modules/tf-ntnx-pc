@@ -30,6 +30,7 @@ initializing
 karbon
 kics
 kicscache
+kmip
 mahd
 maximize
 misconfig

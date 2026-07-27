@@ -98,3 +98,42 @@ variable "restores" {
   }))
   default = {}
 }
+
+variable "ssl_certificates" {
+  description = "Map of SSL certificates to manage for cluster/PC instances (nutanix_ssl_certificate_v2)"
+  type = map(object({
+    cluster_ext_id        = optional(string)
+    passphrase            = optional(string)
+    private_key           = optional(string)
+    public_certificate    = optional(string)
+    ca_chain              = optional(string)
+    private_key_algorithm = optional(string, "RSA_2048")
+  }))
+  default = {}
+}
+
+variable "key_management_servers" {
+  description = "Map of Key Management Servers to configure (nutanix_key_management_server_v2)"
+  type = map(object({
+    name = string
+    kmip_key_vault = optional(object({
+      ca_name     = string
+      ca_pem      = string
+      cert_pem    = string
+      private_key = string
+      endpoints = list(object({
+        ip   = string
+        port = number
+      }))
+    }))
+    azure_key_vault = optional(object({
+      endpoint_url           = string
+      key_id                 = string
+      tenant_id              = string
+      client_id              = string
+      client_secret          = string
+      credential_expiry_date = string
+    }))
+  }))
+  default = {}
+}
