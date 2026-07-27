@@ -180,3 +180,56 @@ resource "nutanix_pc_restore_v2" "restore" {
     create = "120m"
   }
 }
+
+resource "nutanix_ssl_certificate_v2" "ssl_cert" {
+  for_each = var.ssl_certificates
+
+  cluster_ext_id        = coalesce(each.value.cluster_ext_id, var.domain_manager_ext_id)
+  passphrase            = each.value.passphrase
+  private_key           = each.value.private_key
+  public_certificate    = each.value.public_certificate
+  ca_chain              = each.value.ca_chain
+  private_key_algorithm = each.value.private_key_algorithm
+}
+
+resource "nutanix_key_management_server_v2" "kms" {
+  for_each = var.key_management_servers
+
+  name = each.value.name
+
+  access_information {
+    dynamic "kmip_key_vault" {
+      for_each = each.value.kmip_key_vault != null ? [each.value.kmip_key_vault] : []
+      content {
+        ca_name     = kmip_key_vault.value.ca_name
+        ca_pem      = kmip_key_vault.value.ca_pem
+        cert_pem    = kmip_key_vault.value.cert_pem
+        private_key = kmip_key_vault.value.private_key
+
+        dynamic "endpoint_url" {
+          for_each = kmip_key_vault.value.endpoints
+          content {
+            port = endpoint_url.value.port
+            ip_address {
+              ipv4 {
+                value = endpoint_url.value.ip
+              }
+            }
+          }
+        }
+      }
+    }
+
+    dynamic "azure_key_vault" {
+      for_each = each.value.azure_key_vault != null ? [each.value.azure_key_vault] : []
+      content {
+        endpoint_url           = azure_key_vault.value.endpoint_url
+        key_id                 = azure_key_vault.value.key_id
+        tenant_id              = azure_key_vault.value.tenant_id
+        client_id              = azure_key_vault.value.client_id
+        client_secret          = azure_key_vault.value.client_secret
+        credential_expiry_date = azure_key_vault.value.credential_expiry_date
+      }
+    }
+  }
+}
