@@ -70,3 +70,6 @@ utilize
 vcpus
 prek
 nixos
+SecretSpec
+mktemp
+bingamon

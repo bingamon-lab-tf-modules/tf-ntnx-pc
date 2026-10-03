@@ -10,14 +10,14 @@ A description of the module goes here.
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.10.0 |
 | <a name="requirement_nutanix"></a> [nutanix](#requirement\_nutanix) | >= 2.4.2 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_nutanix"></a> [nutanix](#provider\_nutanix) | 2.4.2 |
 
 ## Modules
@@ -27,7 +27,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [nutanix_key_management_server_v2.kms](https://registry.terraform.io/providers/nutanix/nutanix/latest/docs/resources/key_management_server_v2) | resource |
 | [nutanix_pc_backup_target_v2.backup_target](https://registry.terraform.io/providers/nutanix/nutanix/latest/docs/resources/pc_backup_target_v2) | resource |
 | [nutanix_pc_restore_source_v2.restore_source](https://registry.terraform.io/providers/nutanix/nutanix/latest/docs/resources/pc_restore_source_v2) | resource |
@@ -39,7 +39,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_backup_targets"></a> [backup\_targets](#input\_backup\_targets) | Map of backup targets (cluster or object store) | <pre>map(object({<br/>    domain_manager_ext_id = string<br/>    location_type         = string # "cluster" or "object_store"<br/>    cluster_ext_id        = optional(string)<br/>    object_store_config = optional(object({<br/>      bucket_name       = string<br/>      region            = string<br/>      access_key_id     = string<br/>      secret_access_key = string<br/>    }))<br/>    backup_policy = optional(object({<br/>      rpo_in_minutes = number<br/>    }))<br/>  }))</pre> | `{}` | no |
 | <a name="input_domain_manager_ext_id"></a> [domain\_manager\_ext\_id](#input\_domain\_manager\_ext\_id) | Domain manager (Prism Central) external ID for data lookups | `string` | `null` | no |
 | <a name="input_enable_data_lookups"></a> [enable\_data\_lookups](#input\_enable\_data\_lookups) | Enable data source lookups for existing resources | `bool` | `false` | no |
@@ -51,7 +51,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_backup_target_ids"></a> [backup\_target\_ids](#output\_backup\_target\_ids) | Map of backup target names to ext\_ids |
 | <a name="output_backup_targets"></a> [backup\_targets](#output\_backup\_targets) | Backup target details |
 | <a name="output_outputs"></a> [outputs](#output\_outputs) | Aggregate of all module outputs (spec §7.6 contract, consumed by the landing zone as module.<x>.outputs). |
