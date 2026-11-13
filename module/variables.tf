@@ -74,6 +74,10 @@ variable "restores" {
       size                        = string
       should_enable_lockdown_mode = optional(bool)
       build_version               = optional(string)
+      credentials = optional(list(object({
+        username = string
+        password = string
+      })), [])
       resource_config = optional(object({
         container_ext_ids    = optional(list(string))
         data_disk_size_bytes = optional(number)

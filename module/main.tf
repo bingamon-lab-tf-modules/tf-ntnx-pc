@@ -99,10 +99,15 @@ resource "nutanix_pc_restore_v2" "restore" {
       size                        = each.value.domain_manager_config.size
       should_enable_lockdown_mode = each.value.domain_manager_config.should_enable_lockdown_mode
 
-      dynamic "build_info" {
-        for_each = each.value.domain_manager_config.build_version != null ? [1] : []
+      build_info {
+        version = each.value.domain_manager_config.build_version
+      }
+
+      dynamic "credentials" {
+        for_each = each.value.domain_manager_config.credentials
         content {
-          version = each.value.domain_manager_config.build_version
+          username = credentials.value.username
+          password = credentials.value.password
         }
       }
 
