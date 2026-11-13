@@ -275,3 +275,206 @@ run "object_store_target_missing_backup_policy" {
     check.object_store_targets_have_backup_policy,
   ]
 }
+
+# Test 9: Object-store restore source, PC restore, SSL certificate, KMS, and
+# populated data lookups validate v2.5.1 write-only/sensitive attributes and
+# string-typed network.management_server.type.
+run "v251_write_only_resources_and_populated_lookups" {
+  command = plan
+
+  variables {
+    enable_data_lookups   = true
+    domain_manager_ext_id = "00000000-0000-0000-0000-000000000001"
+
+    restore_sources = {
+      s3_source = {
+        location_type = "object_store"
+        object_store_config = {
+          bucket_name       = "mock-restore-bucket"
+          region            = "us-east-1"
+          access_key_id     = "mock-restore-access-key"
+          secret_access_key = "mock-restore-secret-key"
+        }
+        backup_policy = {
+          rpo_in_minutes = 60
+        }
+      }
+    }
+
+    restores = {
+      dr_restore = {
+        ext_id                           = "22222222-2222-2222-2222-222222222222"
+        restore_source_ext_id            = "33333333-3333-3333-3333-333333333333"
+        restorable_domain_manager_ext_id = "00000000-0000-0000-0000-000000000001"
+        domain_manager_config = {
+          name = "pc-restored"
+          size = "STARTER"
+          credentials = [
+            {
+              username = "admin"
+              password = "MockAdminPassword123!"
+            }
+          ]
+        }
+        domain_manager_network = {
+          external_address_ipv4 = "192.0.2.10"
+          name_servers          = ["192.0.2.53"]
+          ntp_servers           = ["192.0.2.123"]
+          external_networks = [
+            {
+              network_ext_id       = "44444444-4444-4444-4444-444444444444"
+              default_gateway_ipv4 = "192.0.2.1"
+              subnet_mask_ipv4     = "255.255.255.0"
+              ip_ranges = [
+                {
+                  start_ipv4 = "192.0.2.20"
+                  end_ipv4   = "192.0.2.25"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+
+    ssl_certificates = {
+      pc_tls = {
+        passphrase            = "mock-passphrase"
+        private_key           = "mock-private-key-pem"
+        public_certificate    = "mock-public-cert-pem"
+        ca_chain              = "mock-ca-chain-pem"
+        private_key_algorithm = "RSA_2048"
+      }
+    }
+
+    key_management_servers = {
+      kmip_vault = {
+        name = "lab-kmip"
+        kmip_key_vault = {
+          ca_name     = "lab-kmip-ca"
+          ca_pem      = "mock-ca-pem"
+          cert_pem    = "mock-cert-pem"
+          private_key = "mock-kmip-private-key"
+          endpoints = [
+            {
+              ip   = "192.0.2.60"
+              port = 5696
+            }
+          ]
+        }
+      }
+      azure_vault = {
+        name = "lab-akv"
+        azure_key_vault = {
+          endpoint_url           = "https://lab-akv.vault.azure.net"
+          key_id                 = "lab-kek"
+          tenant_id              = "55555555-5555-5555-5555-555555555555"
+          client_id              = "66666666-6666-6666-6666-666666666666"
+          client_secret          = "mock-azure-client-secret"
+          credential_expiry_date = "2027-12-31"
+        }
+      }
+    }
+  }
+
+  override_data {
+    target = data.nutanix_clusters_v2.pc[0]
+    values = {
+      cluster_entities = [
+        {
+          ext_id                   = "00000000-0000-0000-0000-000000000001"
+          name                     = "mock-prism-central-cluster"
+          backup_eligibility_score = 0
+          categories               = []
+          cluster_profile_ext_id   = ""
+          container_name           = ""
+          expand                   = ""
+          inefficient_vm_count     = 0
+          links                    = []
+          network = [
+            {
+              backplane                  = null
+              external_address           = null
+              external_data_services_ip  = null
+              external_subnet            = null
+              fqdn                       = "pc.example.test"
+              http_proxy_list            = null
+              http_proxy_white_list      = null
+              internal_subnet            = null
+              key_management_server_type = null
+              management_server = [
+                {
+                  ip             = null
+                  is_drs_enabled = false
+                  is_in_use      = true
+                  is_registered  = true
+                  type           = "VCENTER"
+                }
+              ]
+              masquerading_ip       = null
+              masquerading_port     = null
+              name_server_ip_list   = null
+              nfs_subnet_white_list = null
+              ntp_server_ip_list    = null
+              smtp_server           = null
+            }
+          ]
+          nodes          = []
+          tenant_id      = ""
+          upgrade_status = ""
+          vm_count       = 0
+          config = [
+            {
+              authorized_public_key_list       = []
+              build_info                       = []
+              cluster_arch                     = ""
+              cluster_function                 = ["PRISM_CENTRAL"]
+              cluster_software_map             = []
+              encryption_in_transit_status     = ""
+              encryption_option                = []
+              encryption_scope                 = []
+              fault_tolerance_state            = []
+              hypervisor_types                 = ["AHV"]
+              incarnation_id                   = 0
+              is_available                     = true
+              is_lts                           = false
+              is_password_remote_login_enabled = false
+              is_remote_support_enabled        = false
+              operation_mode                   = ""
+              pulse_status                     = []
+              redundancy_factor                = 2
+              timezone                         = ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  override_data {
+    target = data.nutanix_pc_backup_targets_v2.existing[0]
+    values = {
+      backup_targets = [
+        {
+          backup_pause_reason = ""
+          ext_id              = "77777777-7777-7777-7777-777777777777"
+          is_backup_paused    = false
+          last_sync_time      = "2026-11-13T00:00:00Z"
+          links               = []
+          location            = []
+          tenant_id           = ""
+        }
+      ]
+    }
+  }
+
+  assert {
+    condition     = output.pc_summary.total_restore_sources == 1
+    error_message = "Expected 1 object-store restore source"
+  }
+
+  assert {
+    condition     = output.pc_summary.total_restores == 1 && contains(keys(output.restore_ids), "dr_restore")
+    error_message = "Expected 1 restore operation keyed by dr_restore"
+  }
+}
